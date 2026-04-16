@@ -15,7 +15,8 @@
   - process variation / physics-informed / bayesian optimization /
     bayesian adaptive design / active learning / inverse design /
     sequential design of experiments / sensitivity-aware sampling /
-    global sensitivity analysis / surrogate modeling / cs.LG and physics.comp-ph
+    global sensitivity analysis / surrogate modeling / cs.LG and physics.comp-ph /
+    Tandem Structure / Mixture Density Networks / Determinantal Point Processes
 - 이전 루틴 결과와 중복되는 논문은 제외
 - 코드 구현이 공개되어 있지 않으면 핵심 방법을 재현하는 간단한 참조 구현을 함께 작성
 
