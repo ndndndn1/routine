@@ -28,6 +28,12 @@
 | `inverse-design/` | cross-link from physics-informed (seed: 260415) |
 | `active-learning_sequential-design-of-experiments_surrogate-modeling_bayesian-optimization/` | active-learning × SDoE × surrogate × BO (routine: 260416) |
 | `active-learning_surrogate-modeling_bayesian-adaptive-design/` | active-learning × surrogate × Bayesian adaptive design (routine: 260416) |
+| `active-learning_tandem-structure_surrogate-modeling/` | active-learning × Tandem Structure × surrogate (routine: 260416) |
+| `multimodal-inverse-design_tandem-structure_mixture-density-networks_invertible-neural-networks/` | Multimodal inverse design × Tandem × MDN × INN (routine: 260416) |
+| `active-learning_global-sensitivity-analysis_surrogate-modeling/` | active-learning × GSA × surrogate (routine: 260416) |
+| `sequential-design-of-experiments_bayesian-adaptive-design_surrogate-modeling_physics-informed/` | SDoE × Bayesian adaptive × surrogate × physics-informed (routine: 260416) |
+| `sequential-design-of-experiments_bayesian-adaptive-design/` | SDoE × Bayesian adaptive design (routine: 260416) |
+| `sensitivity-aware-sampling_surrogate-modeling/` | sensitivity-aware sampling × surrogate (routine: 260416) |
 
 ## 논문 인덱스 (중복 방지)
 
@@ -37,6 +43,12 @@
 | 2603.10987 | MCMC Informed Neural Emulators for Uncertainty Quantification in Dynamical Systems | 260415 |
 | 2603.21180 | ALMAB-DC: Active Learning, Multi-Armed Bandits, and Distributed Computing for Sequential Experimental Design and Black-Box Optimization | 260416 |
 | 2603.18259 | ALABI: Active Learning for Accelerated Bayesian Inference | 260416 |
+| 2502.15643 | AutoTandemML: Active Learning Enhanced Tandem Neural Networks for Inverse Design Problems | 260416 |
+| 2411.09429 | AI-driven inverse design of materials: Past, present and future | 260416 |
+| 2601.11790 | Gradient-based Active Learning with Gaussian Processes for Global Sensitivity Analysis | 260416 |
+| 2603.16756 | Sequential Bayesian Experimental Design for Prediction in Physical Experiments Informed by Computer Models | 260416 |
+| 2504.13320 | Gradient-Free Sequential Bayesian Experimental Design via Interacting Particle Systems | 260416 |
+| 2503.04181 | Boosting Offline Optimizers with Surrogate Sensitivity | 260416 |
 
 ## 트리거
 
