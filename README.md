@@ -34,6 +34,12 @@
 | `sequential-design-of-experiments_bayesian-adaptive-design_surrogate-modeling_physics-informed/` | SDoE × Bayesian adaptive × surrogate × physics-informed (routine: 260416) |
 | `sequential-design-of-experiments_bayesian-adaptive-design/` | SDoE × Bayesian adaptive design (routine: 260416) |
 | `sensitivity-aware-sampling_surrogate-modeling/` | sensitivity-aware sampling × surrogate (routine: 260416) |
+| `determinantal-point-processes_bayesian-optimization/` | DPP × bayesian optimization (routine: 260417) |
+| `invertible-neural-networks_surrogate-modeling/` | INN × surrogate modeling (routine: 260417) |
+| `physics-informed_invertible-neural-networks/` | physics-informed × INN/normalizing flow (routine: 260417) |
+| `process-variation_physics-informed_surrogate-modeling/` | process variation × physics-informed × surrogate (routine: 260417) |
+| `active-learning_surrogate-modeling/` | active learning × surrogate modeling (routine: 260417) |
+| `determinantal-point-processes_active-learning/` | DPP × active learning (routine: 260417) |
 
 ## 논문 인덱스 (중복 방지)
 
@@ -49,6 +55,12 @@
 | 2603.16756 | Sequential Bayesian Experimental Design for Prediction in Physical Experiments Informed by Computer Models | 260416 |
 | 2504.13320 | Gradient-Free Sequential Bayesian Experimental Design via Interacting Particle Systems | 260416 |
 | 2503.04181 | Boosting Offline Optimizers with Surrogate Sensitivity | 260416 |
+| 2406.08799 | Pareto Front-Diverse Batch Multi-Objective Bayesian Optimization | 260417 |
+| 2510.26704 | How Regularization Terms Make Invertible Neural Networks Bayesian Point Estimators | 260417 |
+| 2511.03241 | A Unified Physics-Informed Generative Operator Framework for General Inverse Problems (IGNO) | 260417 |
+| 2510.26586 | Physics-Informed Mixture Models and Surrogate Models for Precision Additive Manufacturing | 260417 |
+| 2603.13646 | Surrogate-Based Bayesian Inference: Uncertainty Quantification and Active Learning | 260417 |
+| 2603.22160 | Data Curation for Machine Learning Interatomic Potentials by Determinantal Point Processes | 260417 |
 
 ## 트리거
 
