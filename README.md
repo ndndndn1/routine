@@ -40,6 +40,10 @@
 | `process-variation_physics-informed_surrogate-modeling/` | process variation × physics-informed × surrogate (routine: 260417) |
 | `active-learning_surrogate-modeling/` | active learning × surrogate modeling (routine: 260417) |
 | `determinantal-point-processes_active-learning/` | DPP × active learning (routine: 260417) |
+| `sequential-design-of-experiments_surrogate-modeling_bayesian-adaptive-design/` | SDoE × surrogate × Bayesian adaptive design (routine: 260420) |
+| `bayesian-adaptive-design_global-sensitivity-analysis/` | Bayesian adaptive design × GSA (routine: 260420) |
+| `physics-informed_bayesian-optimization/` | physics-informed × BO (routine: 260420) |
+| `bayesian-optimization_surrogate-modeling/` | BO × surrogate modeling (routine: 260420) |
 
 ## 논문 인덱스 (중복 방지)
 
@@ -61,10 +65,16 @@
 | 2510.26586 | Physics-Informed Mixture Models and Surrogate Models for Precision Additive Manufacturing | 260417 |
 | 2603.13646 | Surrogate-Based Bayesian Inference: Uncertainty Quantification and Active Learning | 260417 |
 | 2603.22160 | Data Curation for Machine Learning Interatomic Potentials by Determinantal Point Processes | 260417 |
+| 2402.16520 | Sequential Design for Surrogate Modeling in Bayesian Inverse Problems | 260420 |
+| 2406.13425 | Coupled Input-Output Dimension Reduction: Goal-oriented Bayesian Experimental Design and Global Sensitivity Analysis | 260420 |
+| 2407.09739 | Active Learning for Derivative-Based Global Sensitivity Analysis with Gaussian Processes | 260420 |
+| 2503.00420 | A Physics-Informed Bayesian Optimization Method for Rapid Development of Electrical Machines | 260420 |
+| 2509.04651 | Sensitivity-Driven Adaptive Surrogate Modeling for Simulation and Optimization of Dynamical Systems | 260420 |
+| 2602.04537 | An Efficient Bayesian Framework for Inverse Problems via Optimization and Inversion | 260420 |
 
 ## 트리거
 
-- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-04-16`, 태그 `260416`)를 기준으로 -24개월 윈도우.
+- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-04-20`, 태그 `260420`)를 기준으로 -24개월 윈도우.
 - 키워드 ≥2 매칭, 이전 인덱스와 중복 제외.
 
 ## 구조
