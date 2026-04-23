@@ -8,12 +8,13 @@
 
 ## 선정 규칙
 
-- 다음 키워드 중 **2개 이상** 일치하는 논문만 포함
+- 다음 키워드 중 **3개 이상** 일치하는 논문만 포함
   - process variation / physics-informed / bayesian optimization / Invertible Neural Networks /
     bayesian adaptive design / active learning / Multimodal inverse design /
     sequential design of experiments / sensitivity-aware sampling /
     global sensitivity analysis / surrogate modeling / cs.LG and physics.comp-ph /
-    Tandem Structure / Mixture Density Networks / Determinantal Point Processes
+    Tandem Structure / Mixture Density Networks / Determinantal Point Processes /
+    Interaction-Integrated Gradients (I-IG) / Transformer-Specific Attribution
 - 이전 루틴 결과와 중복되는 논문은 제외
 - 코드 구현이 공개되어 있지 않으면 핵심 방법을 재현하는 간단한 참조 구현을 함께 작성
 
@@ -40,6 +41,11 @@
 | [`process-variation_physics-informed_surrogate-modeling/`](./process-variation_physics-informed_surrogate-modeling/) | process variation × physics-informed × surrogate (routine: 260417) |
 | [`active-learning_surrogate-modeling/`](./active-learning_surrogate-modeling/) | active learning × surrogate modeling (routine: 260417) |
 | [`determinantal-point-processes_active-learning/`](./determinantal-point-processes_active-learning/) | DPP × active learning (routine: 260417) |
+| [`active-learning_sequential-design-of-experiments_bayesian-adaptive-design_surrogate-modeling/`](./active-learning_sequential-design-of-experiments_bayesian-adaptive-design_surrogate-modeling/) | active-learning × SDoE × Bayesian adaptive × surrogate (routine: 260423) |
+| [`mixture-density-networks_physics-informed_multimodal-inverse-design/`](./mixture-density-networks_physics-informed_multimodal-inverse-design/) | MDN × physics-informed × Multimodal inverse design (routine: 260423) |
+| [`invertible-neural-networks_bayesian-optimization_surrogate-modeling/`](./invertible-neural-networks_bayesian-optimization_surrogate-modeling/) | INN × bayesian optimization × surrogate (routine: 260423) |
+| [`physics-informed_sequential-design-of-experiments_active-learning/`](./physics-informed_sequential-design-of-experiments_active-learning/) | physics-informed × SDoE × active learning (routine: 260423) |
+| [`physics-informed_bayesian-optimization_surrogate-modeling/`](./physics-informed_bayesian-optimization_surrogate-modeling/) | physics-informed × BO × surrogate (routine: 260423) |
 
 ## 논문 인덱스 (중복 방지)
 
@@ -61,6 +67,12 @@
 | 2510.26586 | Physics-Informed Mixture Models and Surrogate Models for Precision Additive Manufacturing | 260417 |
 | 2603.13646 | Surrogate-Based Bayesian Inference: Uncertainty Quantification and Active Learning | 260417 |
 | 2603.22160 | Data Curation for Machine Learning Interatomic Potentials by Determinantal Point Processes | 260417 |
+| 2601.05868 | Sequential Bayesian Optimal Experimental Design in Infinite Dimensions via Policy Gradient RL | 260423 |
+| 2407.18885 | Simulation Experiment Design for Calibration via Active Learning | 260423 |
+| 2602.10451 | A Multimodal Conditional Mixture Model with Distribution-Level Physics Priors | 260423 |
+| 2504.14889 | Latent Bayesian Optimization via Autoregressive Normalizing Flows (ICLR 2025) | 260423 |
+| 2503.07070 | PIED: Physics-Informed Experimental Design for Inverse Problems (ICLR 2025) | 260423 |
+| 2601.18638 | Physics-Informed Uncertainty Enables Reliable AI-driven Design | 260423 |
 
 ## How to use
 
@@ -103,7 +115,7 @@ S_new, X_new = suggest_next_batch(
 
 ## 트리거
 
-- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-04-16`, 태그 `260416`)를 기준으로 -24개월 윈도우.
+- PR에 `\d{6}\s` 형식의 일자가 들어오면 해당 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자를 기준으로 -24개월 윈도우 (현재 `2026-04-23`, 태그 `260423`).
 - 키워드 ≥2 매칭, 이전 인덱스와 중복 제외.
 
 ## 구조
