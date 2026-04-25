@@ -8,12 +8,13 @@
 
 ## 선정 규칙
 
-- 다음 키워드 중 **2개 이상** 일치하는 논문만 포함
+- 다음 키워드 중 **3개 이상** 일치하는 논문만 포함
   - process variation / physics-informed / bayesian optimization / Invertible Neural Networks /
     bayesian adaptive design / active learning / Multimodal inverse design /
     sequential design of experiments / sensitivity-aware sampling /
     global sensitivity analysis / surrogate modeling / cs.LG and physics.comp-ph /
-    Tandem Structure / Mixture Density Networks / Determinantal Point Processes
+    Tandem Structure / Mixture Density Networks / Determinantal Point Processes /
+    Interaction-Integrated Gradients (I-IG) / Transformer-Specific Attribution
 - 이전 루틴 결과와 중복되는 논문은 제외
 - 코드 구현이 공개되어 있지 않으면 핵심 방법을 재현하는 간단한 참조 구현을 함께 작성
 
@@ -40,6 +41,15 @@
 | [`process-variation_physics-informed_surrogate-modeling/`](./process-variation_physics-informed_surrogate-modeling/) | process variation × physics-informed × surrogate (routine: 260417) |
 | [`active-learning_surrogate-modeling/`](./active-learning_surrogate-modeling/) | active learning × surrogate modeling (routine: 260417) |
 | [`determinantal-point-processes_active-learning/`](./determinantal-point-processes_active-learning/) | DPP × active learning (routine: 260417) |
+| [`active-learning_bayesian-adaptive-design_global-sensitivity-analysis_sequential-design-of-experiments_surrogate-modeling/`](./active-learning_bayesian-adaptive-design_global-sensitivity-analysis_sequential-design-of-experiments_surrogate-modeling/) | AL × BAD × GSA × SDoE × surrogate (routine: 260425) |
+| [`active-learning_bayesian-optimization_physics-informed_surrogate-modeling/`](./active-learning_bayesian-optimization_physics-informed_surrogate-modeling/) | AL × BO × physics-informed × surrogate (routine: 260425) |
+| [`active-learning_bayesian-adaptive-design_sequential-design-of-experiments_surrogate-modeling/`](./active-learning_bayesian-adaptive-design_sequential-design-of-experiments_surrogate-modeling/) | AL × BAD × SDoE × surrogate (routine: 260425) |
+| [`active-learning_bayesian-adaptive-design_physics-informed_surrogate-modeling/`](./active-learning_bayesian-adaptive-design_physics-informed_surrogate-modeling/) | AL × BAD × physics-informed × surrogate (routine: 260425) |
+| [`active-learning_bayesian-adaptive-design_sequential-design-of-experiments/`](./active-learning_bayesian-adaptive-design_sequential-design-of-experiments/) | AL × BAD × SDoE (routine: 260425) |
+| [`mixture-density-networks_multimodal-inverse-design_surrogate-modeling/`](./mixture-density-networks_multimodal-inverse-design_surrogate-modeling/) | MDN × multimodal inverse design × surrogate (routine: 260425) |
+| [`physics-informed_surrogate-modeling_tandem-structure/`](./physics-informed_surrogate-modeling_tandem-structure/) | physics-informed × surrogate × Tandem (routine: 260425) |
+| [`bayesian-optimization_global-sensitivity-analysis_multimodal-inverse-design_surrogate-modeling/`](./bayesian-optimization_global-sensitivity-analysis_multimodal-inverse-design_surrogate-modeling/) | BO × GSA × multimodal inverse × surrogate (routine: 260425) |
+| [`active-learning_bayesian-optimization_multimodal-inverse-design_sequential-design-of-experiments_surrogate-modeling/`](./active-learning_bayesian-optimization_multimodal-inverse-design_sequential-design-of-experiments_surrogate-modeling/) | AL × BO × multimodal inverse × SDoE × surrogate (routine: 260425) |
 
 ## 논문 인덱스 (중복 방지)
 
@@ -61,6 +71,16 @@
 | 2510.26586 | Physics-Informed Mixture Models and Surrogate Models for Precision Additive Manufacturing | 260417 |
 | 2603.13646 | Surrogate-Based Bayesian Inference: Uncertainty Quantification and Active Learning | 260417 |
 | 2603.22160 | Data Curation for Machine Learning Interatomic Potentials by Determinantal Point Processes | 260417 |
+| 2407.09739 | Active Learning for Derivative-Based Global Sensitivity Analysis with Gaussian Processes | 260425 |
+| 2601.18638 | Physics-Informed Uncertainty Enables Reliable AI-driven Design | 260425 |
+| 2402.16520 | Sequential design for surrogate modeling in Bayesian inverse problems | 260425 |
+| 2602.01176 | Multi-Fidelity Physics-Informed Neural Networks with Bayesian Uncertainty Quantification | 260425 |
+| 2506.07259 | ALINE: Joint Amortization for Bayesian Inference and Active Data Acquisition | 260425 |
+| 2409.00564 | Using Deep Learning to Design High Aspect Ratio Fusion Devices | 260425 |
+| 2603.15430 | Physics-Informed Deep Neural Network Design of Reactively Loaded Metasurfaces | 260425 |
+| 2502.05372 | Active Learning of Model Discrepancy with Bayesian Experimental Design | 260425 |
+| 2509.21711 | Multi-modal Bayesian Neural Network Surrogates with Conjugate Last-Layer Estimation | 260425 |
+| 2509.05641 | GUIDe: Generative and Uncertainty-Informed Inverse Design for On-Demand Nonlinear Functional Responses | 260425 |
 
 ## How to use
 
@@ -103,8 +123,8 @@ S_new, X_new = suggest_next_batch(
 
 ## 트리거
 
-- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-04-16`, 태그 `260416`)를 기준으로 -24개월 윈도우.
-- 키워드 ≥2 매칭, 이전 인덱스와 중복 제외.
+- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-04-25`, 태그 `260425`)를 기준으로 -24개월 윈도우.
+- 키워드 ≥3 매칭, 이전 인덱스와 중복 제외.
 
 ## 구조
 
