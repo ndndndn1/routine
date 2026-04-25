@@ -213,7 +213,7 @@ def run_ip_sur(
                 gp, theta_grid, weights, x_min, x_max
             )
             x_next = float(x_next)
-            y_next = float(forward_model(x_next)) + rng.normal(0, noise_std)
+            y_next = float(np.squeeze(forward_model(x_next))) + float(rng.normal(0, noise_std))
 
             X_design = np.append(X_design, x_next)
             Y_design = np.append(Y_design, y_next)
