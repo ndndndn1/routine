@@ -15,15 +15,20 @@ from sklearn.gaussian_process.kernels import Matern, ConstantKernel, WhiteKernel
 # ---------------------------------------------------------------------------
 
 def forward_model(theta):
-    """Toy 1D forward model: sin plus quadratic."""
+    """1D-input, 2D-output toy forward model: polynomial plus sinusoidal components."""
     theta = np.asarray(theta, dtype=float).ravel()
-    return np.sin(3.0 * theta) + 0.5 * theta ** 2 - 0.3 * theta
+    f1 = theta + 0.3 * np.sin(2.0 * theta)
+    f2 = 0.5 * theta ** 2 - 0.1 * np.cos(4.0 * theta)
+    return np.stack([f1, f2], axis=-1)   # shape (n, 2)
 
 
-def log_likelihood(y_obs, gp_mean, gp_std, noise_std):
-    """Gaussian log-likelihood of scalar observation given GP predictive mean/std."""
-    total_var = gp_std ** 2 + noise_std ** 2
-    return -0.5 * ((y_obs - gp_mean) ** 2 / total_var + np.log(2.0 * np.pi * total_var))
+def log_likelihood_gaussian(y_obs, gp_means, gp_stds, noise_std):
+    """Sum of per-output Gaussian log-likelihoods."""
+    ll = 0.0
+    for y, mu, sig in zip(y_obs, gp_means, gp_stds):
+        total_var = sig ** 2 + noise_std ** 2
+        ll += -0.5 * ((y - mu) ** 2 / total_var + np.log(2.0 * np.pi * total_var))
+    return float(ll)
 
 
 def log_prior_uniform(theta, lo, hi):
@@ -35,15 +40,26 @@ def log_prior_uniform(theta, lo, hi):
 # Grid-based posterior
 # ---------------------------------------------------------------------------
 
-def compute_posterior_weights(theta_grid, y_obs, gp, noise_std, lo, hi):
-    """Evaluate unnormalised log-posterior on theta_grid and return softmax weights."""
-    gp_mean, gp_std = gp.predict(theta_grid.reshape(-1, 1), return_std=True)
-    gp_std = np.maximum(gp_std, 1e-8)
+def compute_posterior_weights(theta_grid, y_obs, gps, noise_std, lo, hi):
+    """Evaluate unnormalised log-posterior on theta_grid and return normalised weights."""
+    n = len(theta_grid)
+    log_post = np.zeros(n)
 
-    log_post = np.array([
-        log_prior_uniform(th, lo, hi) + log_likelihood(y_obs, mu, sig, noise_std)
-        for th, mu, sig in zip(theta_grid, gp_mean, gp_std)
-    ])
+    X_grid = theta_grid.reshape(-1, 1)
+    # Pre-compute GP predictions for all outputs at once
+    gp_preds = []
+    for gp in gps:
+        mu, sig = gp.predict(X_grid, return_std=True)
+        gp_preds.append((mu, np.maximum(sig, 1e-8)))
+
+    for i, th in enumerate(theta_grid):
+        lp = log_prior_uniform(th, lo, hi)
+        if not np.isfinite(lp):
+            log_post[i] = -np.inf
+            continue
+        gp_means = [gp_preds[k][0][i] for k in range(len(gps))]
+        gp_stds  = [gp_preds[k][1][i] for k in range(len(gps))]
+        log_post[i] = lp + log_likelihood_gaussian(y_obs, gp_means, gp_stds, noise_std)
 
     log_post -= np.max(log_post)
     weights = np.exp(log_post)
@@ -63,47 +79,61 @@ def build_gp():
         + WhiteKernel(noise_level=0.01, noise_level_bounds=(1e-5, 1.0))
     )
     return GaussianProcessRegressor(
-        kernel=kernel, n_restarts_optimizer=5, normalize_y=True
+        kernel=kernel, n_restarts_optimizer=3, normalize_y=True
     )
+
+
+def fit_gps(X_design, Y_design):
+    """Fit one GP per output dimension; return list of fitted GPs."""
+    n_out = Y_design.shape[1]
+    gps = []
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        for k in range(n_out):
+            gp = build_gp()
+            gp.fit(X_design.reshape(-1, 1), Y_design[:, k])
+            gps.append(gp)
+    return gps
 
 
 # ---------------------------------------------------------------------------
 # IP-SUR acquisition
 # ---------------------------------------------------------------------------
 
-def _posterior_variance_after_update(x_cand_val, gp, x_grid):
+def _weighted_var_after_update(x_cand_scalar, gps, theta_grid, weights):
     """
-    Compute the GP posterior variance on x_grid after a virtual observation at x_cand.
+    Compute weighted sum of GP posterior variances after adding virtual obs at x_cand.
 
-    Uses the rank-1 (Sherman-Morrison) update: var_new(x) = var(x) - k(x,c)^2 / var(c).
+    Applies the rank-1 variance reduction formula across all output GPs.
     """
-    x_cand = np.atleast_1d(x_cand_val).ravel()[:1].reshape(1, 1)
+    x_cand = np.array([[float(x_cand_scalar)]])
+    X_grid = theta_grid.reshape(-1, 1)
 
-    mean_grid, std_grid = gp.predict(x_grid.reshape(-1, 1), return_std=True)
-    var_grid = np.maximum(std_grid, 1e-8) ** 2
+    total_wvar = np.zeros(len(theta_grid))
+    for gp in gps:
+        _, std_grid = gp.predict(X_grid, return_std=True)
+        var_grid = np.maximum(std_grid, 1e-8) ** 2
 
-    k_grid_cand = gp.kernel_(x_grid.reshape(-1, 1), x_cand).ravel()
+        # Cross-covariance k(x_grid, x_cand) using fitted kernel
+        k_xc = gp.kernel_(X_grid, x_cand).ravel()
 
-    _, std_cand = gp.predict(x_cand, return_std=True)
-    var_cand = max(float(std_cand[0]) ** 2, 1e-10)
+        _, std_cand = gp.predict(x_cand, return_std=True)
+        var_cand = max(float(std_cand[0]) ** 2, 1e-10)
 
-    var_updated = np.maximum(var_grid - k_grid_cand ** 2 / var_cand, 0.0)
-    return var_updated
+        var_updated = np.maximum(var_grid - k_xc ** 2 / var_cand, 0.0)
+        total_wvar += var_updated
 
-
-def ip_sur_acquisition(x_cand_val, gp, x_grid, posterior_weights):
-    """
-    IP-SUR criterion: posterior-weighted IMSPE after adding candidate x_cand.
-
-    Lower is better; minimise this to select the next design point.
-    """
-    var_updated = _posterior_variance_after_update(x_cand_val, gp, x_grid)
-    return float(np.dot(posterior_weights, var_updated))
+    return float(np.dot(weights, total_wvar))
 
 
-def select_next_point(gp, x_grid, posterior_weights, lo, hi, n_restarts=15):
-    """Minimise IP-SUR via multi-start L-BFGS-B; return best candidate and value."""
-    rng = np.random.default_rng()
+def ip_sur_acquisition(x_arr, gps, theta_grid, weights):
+    """IP-SUR criterion: posterior-weighted IMSPE after adding x as next design point."""
+    return _weighted_var_after_update(float(x_arr[0]), gps, theta_grid, weights)
+
+
+def select_next_point(gps, theta_grid, weights, lo, hi, n_restarts=12, seed=None):
+    """Minimise IP-SUR via multi-start L-BFGS-B; return best x and criterion value."""
+    rng = np.random.default_rng(seed)
     starts = rng.uniform(lo, hi, size=n_restarts)
 
     best_val = np.inf
@@ -115,12 +145,12 @@ def select_next_point(gp, x_grid, posterior_weights, lo, hi, n_restarts=15):
             res = minimize(
                 ip_sur_acquisition,
                 x0=np.array([float(x0)]),
-                args=(gp, x_grid, posterior_weights),
+                args=(gps, theta_grid, weights),
                 method="L-BFGS-B",
                 bounds=[(lo, hi)],
-                options={"maxiter": 200, "ftol": 1e-10},
+                options={"maxiter": 200, "ftol": 1e-12},
             )
-            if res.success and res.fun < best_val:
+            if res.fun < best_val:
                 best_val = res.fun
                 best_x = float(res.x[0])
 
@@ -142,42 +172,44 @@ def run_ip_sur(
     seed=0,
 ):
     """
-    Run IP-SUR sequential design loop for a 1D Bayesian inverse problem.
+    Run the IP-SUR sequential design loop for a Bayesian inverse problem.
 
-    Returns history dict with design points, posteriors, MAP estimates, wIMSPE values.
+    Returns history dict with design points, posteriors, MAP estimates, wIMSPE values,
+    and the theta grid used for posterior approximation.
     """
     rng = np.random.default_rng(seed)
 
     theta_grid = np.linspace(lo, hi, n_grid)
 
-    # Initial design: uniform spread with small jitter
-    X = np.linspace(lo + 0.1, hi - 0.1, n_initial) + rng.uniform(
-        -0.05, 0.05, size=n_initial
+    # Initial space-filling design
+    X = np.linspace(lo + 0.05, hi - 0.05, n_initial) + rng.uniform(
+        -0.02, 0.02, size=n_initial
     )
     X = np.clip(X, lo, hi)
-    Y = forward_model(X) + rng.normal(0, noise_std, size=n_initial)
+    Y_clean = forward_model(X)
+    Y = Y_clean + rng.normal(0, noise_std, size=Y_clean.shape)
 
     history = {
-        "X": [],
-        "Y": [],
-        "weights": [],
-        "map": [],
-        "wIMSPE": [],
+        "X": [], "Y": [],
+        "weights": [], "map": [], "wIMSPE": [],
     }
 
-    gp = build_gp()
-
     for it in range(n_sequential + 1):
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            gp.fit(X.reshape(-1, 1), Y)
+        gps = fit_gps(X, Y)
 
-        weights = compute_posterior_weights(theta_grid, y_obs, gp, noise_std, lo, hi)
+        weights = compute_posterior_weights(
+            theta_grid, y_obs, gps, noise_std, lo, hi
+        )
 
-        map_est = float(theta_grid[np.argmax(weights)])
+        map_idx = int(np.argmax(weights))
+        map_est = float(theta_grid[map_idx])
 
-        _, std_grid = gp.predict(theta_grid.reshape(-1, 1), return_std=True)
-        wIMSPE = float(np.dot(weights, np.maximum(std_grid, 1e-8) ** 2))
+        # Current wIMSPE (sum over outputs)
+        X_grid = theta_grid.reshape(-1, 1)
+        wIMSPE = 0.0
+        for gp in gps:
+            _, std_grid = gp.predict(X_grid, return_std=True)
+            wIMSPE += float(np.dot(weights, np.maximum(std_grid, 1e-8) ** 2))
 
         history["X"].append(X.copy())
         history["Y"].append(Y.copy())
@@ -186,16 +218,19 @@ def run_ip_sur(
         history["wIMSPE"].append(wIMSPE)
 
         if it < n_sequential:
-            x_next, _ = select_next_point(gp, theta_grid, weights, lo, hi)
-            y_next = float(np.squeeze(forward_model(x_next))) + float(
-                rng.normal(0, noise_std)
+            x_next, _ = select_next_point(
+                gps, theta_grid, weights, lo, hi, seed=int(seed) + it
+            )
+            x_next = float(x_next)
+            y_next = forward_model(x_next).ravel() + rng.normal(
+                0, noise_std, size=len(gps)
             )
             X = np.append(X, x_next)
-            Y = np.append(Y, y_next)
+            Y = np.vstack([Y, y_next])
 
             print(
                 f"  Step {it + 1:2d}: x_new={x_next:+.4f}, "
-                f"y_new={y_next:+.4f}, MAP={map_est:+.4f}, wIMSPE={wIMSPE:.4e}"
+                f"MAP={map_est:+.4f}, wIMSPE={wIMSPE:.4e}"
             )
 
     return history, theta_grid
@@ -214,9 +249,10 @@ def credible_interval(theta_grid, weights, level=0.95):
     """Return equal-tailed credible interval at given level from grid posterior."""
     cdf = np.cumsum(weights)
     tail = (1.0 - level) / 2.0
-    lo = float(theta_grid[np.searchsorted(cdf, tail)])
-    hi = float(theta_grid[np.searchsorted(cdf, 1.0 - tail)])
-    return lo, hi
+    lo_idx = int(np.searchsorted(cdf, tail))
+    hi_idx = int(np.searchsorted(cdf, 1.0 - tail))
+    hi_idx = min(hi_idx, len(theta_grid) - 1)
+    return float(theta_grid[lo_idx]), float(theta_grid[hi_idx])
 
 
 # ---------------------------------------------------------------------------
@@ -227,22 +263,23 @@ if __name__ == "__main__":
     np.random.seed(42)
 
     THETA_TRUE = 1.2
-    NOISE_STD = 0.15
-    LO, HI = -2.0, 3.0
-    N_OBS = 5
-    N_INITIAL = 6
-    N_SEQUENTIAL = 12
+    NOISE_STD  = 0.05
+    LO, HI     = -1.5, 2.5
+    N_OBS      = 4          # repeated observations at theta_true
+    N_INITIAL  = 6
+    N_SEQUENTIAL = 10
 
-    rng_obs = np.random.default_rng(99)
-    obs = forward_model(THETA_TRUE) + rng_obs.normal(0, NOISE_STD, size=N_OBS)
-    y_obs = float(np.mean(obs))
+    rng_obs = np.random.default_rng(7)
+    raw_obs = forward_model(THETA_TRUE) + rng_obs.normal(0, NOISE_STD, size=(N_OBS, 2))
+    y_obs = raw_obs.mean(axis=0)              # 2D summary statistic
     eff_noise = NOISE_STD / float(np.sqrt(N_OBS))
 
-    print("=" * 62)
+    print("=" * 64)
     print("  IP-SUR: Sequential GP Design for Bayesian Inverse Problems")
-    print("=" * 62)
+    print("=" * 64)
     print(f"  True parameter  theta* = {THETA_TRUE}")
-    print(f"  Observed mean   y_obs  = {y_obs:.4f}")
+    print(f"  Observed mean   y_obs  = [{y_obs[0]:.4f}, {y_obs[1]:.4f}]")
+    print(f"  Forward model value    = {forward_model(THETA_TRUE).ravel()}")
     print(f"  Effective noise        = {eff_noise:.4f}")
     print(f"  Initial pts: {N_INITIAL},  IP-SUR steps: {N_SEQUENTIAL}")
     print()
@@ -264,7 +301,7 @@ if __name__ == "__main__":
     final_map = history["map"][-1]
 
     print()
-    print("=" * 62)
+    print("=" * 64)
     print("  Final posterior (after IP-SUR)")
     print(f"  True parameter:  {THETA_TRUE:.4f}")
     print(f"  Posterior mean:  {post_mean:.4f}")
@@ -272,9 +309,9 @@ if __name__ == "__main__":
     print(f"  95% CI:          [{ci_lo:.4f}, {ci_hi:.4f}]")
     print(f"  Contains true?   {ci_lo <= THETA_TRUE <= ci_hi}")
     print()
-    print("  wIMSPE trajectory:")
-    w0 = history["wIMSPE"][0]
+    print("  wIMSPE trajectory (lower = less GP uncertainty near posterior):")
+    w0 = history["wIMSPE"][0] + 1e-30
     for i, w in enumerate(history["wIMSPE"]):
-        bar = "#" * int(40 * w / (w0 + 1e-30))
+        bar = "#" * max(1, int(40 * w / w0))
         print(f"    Step {i:2d}: {w:.3e}  |{bar}")
-    print("=" * 62)
+    print("=" * 64)
