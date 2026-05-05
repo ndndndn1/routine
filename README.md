@@ -23,27 +23,24 @@
 
 | 폴더 | 키워드 |
 |---|---|
-| `physics-informed/` | physics-informed / inverse-design / surrogate-modeling (seed: 260415) |
-| `surrogate-modeling/` | surrogate-modeling / Bayesian UQ (seed: 260415) |
-| `inverse-design/` | cross-link from physics-informed (seed: 260415) |
-| `active-learning_sequential-design-of-experiments_surrogate-modeling_bayesian-optimization/` | active-learning × SDoE × surrogate × BO (routine: 260416) |
-| `active-learning_surrogate-modeling_bayesian-adaptive-design/` | active-learning × surrogate × Bayesian adaptive design (routine: 260416) |
-| `active-learning_tandem-structure_surrogate-modeling/` | active-learning × Tandem Structure × surrogate (routine: 260416) |
-| `multimodal-inverse-design_tandem-structure_mixture-density-networks_invertible-neural-networks/` | Multimodal inverse design × Tandem × MDN × INN (routine: 260416) |
-| `active-learning_global-sensitivity-analysis_surrogate-modeling/` | active-learning × GSA × surrogate (routine: 260416) |
-| `sequential-design-of-experiments_bayesian-adaptive-design_surrogate-modeling_physics-informed/` | SDoE × Bayesian adaptive × surrogate × physics-informed (routine: 260416) |
-| `sequential-design-of-experiments_bayesian-adaptive-design/` | SDoE × Bayesian adaptive design (routine: 260416) |
-| `sensitivity-aware-sampling_surrogate-modeling/` | sensitivity-aware sampling × surrogate (routine: 260416) |
-| `determinantal-point-processes_bayesian-optimization/` | DPP × bayesian optimization (routine: 260417) |
-| `invertible-neural-networks_surrogate-modeling/` | INN × surrogate modeling (routine: 260417) |
-| `physics-informed_invertible-neural-networks/` | physics-informed × INN/normalizing flow (routine: 260417) |
-| `process-variation_physics-informed_surrogate-modeling/` | process variation × physics-informed × surrogate (routine: 260417) |
-| `active-learning_surrogate-modeling/` | active learning × surrogate modeling (routine: 260417) |
-| `determinantal-point-processes_active-learning/` | DPP × active learning (routine: 260417) |
-| `sequential-design-of-experiments_surrogate-modeling_bayesian-adaptive-design/` | SDoE × surrogate × Bayesian adaptive design (routine: 260420) |
-| `bayesian-adaptive-design_global-sensitivity-analysis/` | Bayesian adaptive design × GSA (routine: 260420) |
-| `physics-informed_bayesian-optimization/` | physics-informed × BO (routine: 260420) |
-| `bayesian-optimization_surrogate-modeling/` | BO × surrogate modeling (routine: 260420) |
+| [`physics-informed/`](./physics-informed/) | physics-informed / inverse-design / surrogate-modeling (seed: 260415) |
+| [`surrogate-modeling/`](./surrogate-modeling/) | surrogate-modeling / Bayesian UQ (seed: 260415) |
+| [`inverse-design/`](./inverse-design/) | cross-link from physics-informed (seed: 260415) |
+| [`active-learning_sequential-design-of-experiments_surrogate-modeling_bayesian-optimization/`](./active-learning_sequential-design-of-experiments_surrogate-modeling_bayesian-optimization/) | active-learning × SDoE × surrogate × BO (routine: 260416) |
+| [`active-learning_surrogate-modeling_bayesian-adaptive-design/`](./active-learning_surrogate-modeling_bayesian-adaptive-design/) | active-learning × surrogate × Bayesian adaptive design (routine: 260416) |
+| [`active-learning_tandem-structure_surrogate-modeling/`](./active-learning_tandem-structure_surrogate-modeling/) | active-learning × Tandem Structure × surrogate (routine: 260416) |
+| [`multimodal-inverse-design_tandem-structure_mixture-density-networks_invertible-neural-networks/`](./multimodal-inverse-design_tandem-structure_mixture-density-networks_invertible-neural-networks/) | Multimodal inverse design × Tandem × MDN × INN (routine: 260416) |
+| [`active-learning_global-sensitivity-analysis_surrogate-modeling/`](./active-learning_global-sensitivity-analysis_surrogate-modeling/) | active-learning × GSA × surrogate (routine: 260416) |
+| [`sequential-design-of-experiments_bayesian-adaptive-design_surrogate-modeling_physics-informed/`](./sequential-design-of-experiments_bayesian-adaptive-design_surrogate-modeling_physics-informed/) | SDoE × Bayesian adaptive × surrogate × physics-informed (routine: 260416) |
+| [`sequential-design-of-experiments_bayesian-adaptive-design/`](./sequential-design-of-experiments_bayesian-adaptive-design/) | SDoE × Bayesian adaptive design (routine: 260416) |
+| [`sensitivity-aware-sampling_surrogate-modeling/`](./sensitivity-aware-sampling_surrogate-modeling/) | sensitivity-aware sampling × surrogate (routine: 260416) |
+| [`determinantal-point-processes_bayesian-optimization/`](./determinantal-point-processes_bayesian-optimization/) | DPP × bayesian optimization (routine: 260417) — sequence-aware API, see [How to use](#how-to-use) |
+| [`invertible-neural-networks_surrogate-modeling/`](./invertible-neural-networks_surrogate-modeling/) | INN × surrogate modeling (routine: 260417) |
+| [`physics-informed_invertible-neural-networks/`](./physics-informed_invertible-neural-networks/) | physics-informed × INN/normalizing flow (routine: 260417) |
+| [`process-variation_physics-informed_surrogate-modeling/`](./process-variation_physics-informed_surrogate-modeling/) | process variation × physics-informed × surrogate (routine: 260417) |
+| [`active-learning_surrogate-modeling/`](./active-learning_surrogate-modeling/) | active learning × surrogate modeling (routine: 260417) |
+| [`determinantal-point-processes_active-learning/`](./determinantal-point-processes_active-learning/) | DPP × active learning (routine: 260417) |
+
 
 ## 논문 인덱스 (중복 방지)
 
@@ -71,6 +68,45 @@
 | 2503.00420 | A Physics-Informed Bayesian Optimization Method for Rapid Development of Electrical Machines | 260420 |
 | 2509.04651 | Sensitivity-Driven Adaptive Surrogate Modeling for Simulation and Optimization of Dynamical Systems | 260420 |
 | 2602.04537 | An Efficient Bayesian Framework for Inverse Problems via Optimization and Inversion | 260420 |
+
+## How to use
+
+일부 폴더의 참조 구현은 사용자 친화적 API를 함께 제공한다. 현재 제공:
+
+### `determinantal-point-processes_bayesian-optimization/sequence_aware_impl.py`
+
+시퀀스별(레시피/웨이퍼/공정) DOE 제안을 받고 싶을 때. 과거 측정 데이터
+`(sequence, x, y)`를 넣으면 다음에 시도할 `(sequence, x)` 배치를 돌려준다.
+
+```python
+import numpy as np
+from determinantal_point_processes_bayesian_optimization.sequence_aware_impl import (
+    suggest_next_batch,
+)
+# 또는 파일을 바로 sys.path에 추가해 from sequence_aware_impl import ...
+
+S_hist = np.array([0, 0, 1, 1, 2, 2])          # 각 행이 속한 시퀀스 id
+X_hist = np.array([[0.1, 0.5], [0.3, 0.7], ...])  # (N, d) 원공간 파라미터
+Y_hist = np.array([...])                          # (N,) 또는 (N, n_obj) 목적값 (최대화)
+
+bounds = np.array([[0.0, 1.0], [0.0, 1.0]])
+bounds_list = [bounds, bounds, bounds]            # 시퀀스별 파라미터 경계
+
+S_new, X_new = suggest_next_batch(
+    S_hist, X_hist, Y_hist,
+    bounds_list=bounds_list,
+    m_per_seq=[2, 2, 2],    # 시퀀스별 DOE 크기
+    rho=0.3,                # 0=독립 GPs, →1=완전 공유
+    acq="ucb",              # 또는 "ei"
+    seed=None,              # 연속 호출 시 None을 넘겨야 난수 상태가 진행됨
+)
+```
+
+주의:
+- `X_new`는 `bounds_list`와 같은 **원공간(original space)** 값이다 (내부 정규화 없음).
+- 루프에서 같은 `seed=<int>`를 반복 전달하면 매번 동일한 배치가 나온다. 서로
+  다른 배치를 원하면 `seed=None`(기본)으로 두거나 외부 `rng`를 넘겨라.
+- `Y_hist`는 1D(단일 목적) 또는 2D(다중 목적) 둘 다 허용된다.
 
 ## 트리거
 
