@@ -8,12 +8,13 @@
 
 ## 선정 규칙
 
-- 다음 키워드 중 **2개 이상** 일치하는 논문만 포함
+- 다음 키워드 중 **3개 이상** 일치하는 논문만 포함
   - process variation / physics-informed / bayesian optimization / Invertible Neural Networks /
     bayesian adaptive design / active learning / Multimodal inverse design /
     sequential design of experiments / sensitivity-aware sampling /
     global sensitivity analysis / surrogate modeling / cs.LG and physics.comp-ph /
-    Tandem Structure / Mixture Density Networks / Determinantal Point Processes
+    Tandem Structure / Mixture Density Networks / Determinantal Point Processes /
+    Interaction-Integrated Gradients (I-IG) / Transformer-Specific Attribution
 - 이전 루틴 결과와 중복되는 논문은 제외
 - 코드 구현이 공개되어 있지 않으면 핵심 방법을 재현하는 간단한 참조 구현을 함께 작성
 
@@ -40,6 +41,12 @@
 | [`process-variation_physics-informed_surrogate-modeling/`](./process-variation_physics-informed_surrogate-modeling/) | process variation × physics-informed × surrogate (routine: 260417) |
 | [`active-learning_surrogate-modeling/`](./active-learning_surrogate-modeling/) | active learning × surrogate modeling (routine: 260417) |
 | [`determinantal-point-processes_active-learning/`](./determinantal-point-processes_active-learning/) | DPP × active learning (routine: 260417) |
+| [`mixture-density-networks_tandem-structure_multimodal-inverse-design_surrogate-modeling/`](./mixture-density-networks_tandem-structure_multimodal-inverse-design_surrogate-modeling/) | MDN × Tandem × multimodal inverse design × surrogate (routine: 260509) |
+| [`invertible-neural-networks_bayesian-optimization_sequential-design-of-experiments/`](./invertible-neural-networks_bayesian-optimization_sequential-design-of-experiments/) | INN × BO × SDoE (routine: 260509) |
+| [`process-variation_bayesian-optimization_sequential-design-of-experiments_surrogate-modeling/`](./process-variation_bayesian-optimization_sequential-design-of-experiments_surrogate-modeling/) | process variation × BO × SDoE × surrogate (routine: 260509) |
+| [`sensitivity-aware-sampling_active-learning_bayesian-adaptive-design_sequential-design-of-experiments/`](./sensitivity-aware-sampling_active-learning_bayesian-adaptive-design_sequential-design-of-experiments/) | sensitivity-aware × AL × BAD × SDoE (routine: 260509) |
+| [`interaction-integrated-gradients_transformer-specific-attribution_global-sensitivity-analysis/`](./interaction-integrated-gradients_transformer-specific-attribution_global-sensitivity-analysis/) | I-IG × Transformer Attribution × GSA (routine: 260509) |
+| [`global-sensitivity-analysis_physics-informed_surrogate-modeling/`](./global-sensitivity-analysis_physics-informed_surrogate-modeling/) | GSA × physics-informed × surrogate (routine: 260509) |
 
 
 ## 논문 인덱스 (중복 방지)
@@ -68,6 +75,19 @@
 | 2503.00420 | A Physics-Informed Bayesian Optimization Method for Rapid Development of Electrical Machines | 260420 |
 | 2509.04651 | Sensitivity-Driven Adaptive Surrogate Modeling for Simulation and Optimization of Dynamical Systems | 260420 |
 | 2602.04537 | An Efficient Bayesian Framework for Inverse Problems via Optimization and Inversion | 260420 |
+| 2409.17199 | Optical Multilayer Thin Film Structure Inverse Design: From Optimization to Deep Learning | 260509 |
+| 2602.10451 | A Multimodal Conditional Mixture Model with Distribution-Level Physics Priors | 260509 |
+| 2509.03910 | An Invertible Generative Model for Forward and Inverse Problems | 260509 |
+| 2404.13056 | Variational Bayesian Optimal Experimental Design with Normalizing Flows | 260509 |
+| 2408.01114 | PSP-GEN: Stochastic Inversion of the Process-Structure-Property Chain | 260509 |
+| 2511.23141 | Automated Discovery of Laser Dicing Processes with Bayesian Optimization | 260509 |
+| 2509.05641 | GUIDe: Generative and Uncertainty-Informed Inverse Design | 260509 |
+| 2405.07971 | Sensitivity Analysis for Active Sampling, with Applications to Analog Circuits | 260509 |
+| 2409.09141 | Sequential Infinite-Dimensional Bayesian OED with Derivative-Informed LANO | 260509 |
+| 2510.06165 | Higher-Order Feature Attribution: Bridging Statistics, XAI, and Topological Signal Processing | 260509 |
+| 2602.16608 | Context-Aware Layer-Wise Integrated Gradients for Explaining Transformer Models | 260509 |
+| 2505.08740 | Sensitivity-Constrained Fourier Neural Operators for Forward and Inverse Problems | 260509 |
+| 2512.18104 | Microstructure-based Variational Neural Networks for Robust UQ in Materials Digital Twins | 260509 |
 
 ## How to use
 
@@ -110,8 +130,8 @@ S_new, X_new = suggest_next_batch(
 
 ## 트리거
 
-- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-04-20`, 태그 `260420`)를 기준으로 -24개월 윈도우.
-- 키워드 ≥2 매칭, 이전 인덱스와 중복 제외.
+- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-05-09`, 태그 `260509`)를 기준으로 -24개월 윈도우.
+- 키워드 ≥3 매칭, 이전 인덱스와 중복 제외.
 
 ## 구조
 
