@@ -47,6 +47,7 @@
 | [`physics-informed_sequential-design-of-experiments_active-learning/`](./physics-informed_sequential-design-of-experiments_active-learning/) | physics-informed × SDoE × active learning (routine: 260423) |
 | [`physics-informed_bayesian-optimization_surrogate-modeling/`](./physics-informed_bayesian-optimization_surrogate-modeling/) | physics-informed × BO × surrogate (routine: 260423) |
 
+
 ## 논문 인덱스 (중복 방지)
 
 | arXiv | Title | Added |
@@ -73,6 +74,12 @@
 | 2504.14889 | Latent Bayesian Optimization via Autoregressive Normalizing Flows (ICLR 2025) | 260423 |
 | 2503.07070 | PIED: Physics-Informed Experimental Design for Inverse Problems (ICLR 2025) | 260423 |
 | 2601.18638 | Physics-Informed Uncertainty Enables Reliable AI-driven Design | 260423 |
+| 2402.16520 | Sequential Design for Surrogate Modeling in Bayesian Inverse Problems | 260420 |
+| 2406.13425 | Coupled Input-Output Dimension Reduction: Goal-oriented Bayesian Experimental Design and Global Sensitivity Analysis | 260420 |
+| 2407.09739 | Active Learning for Derivative-Based Global Sensitivity Analysis with Gaussian Processes | 260420 |
+| 2503.00420 | A Physics-Informed Bayesian Optimization Method for Rapid Development of Electrical Machines | 260420 |
+| 2509.04651 | Sensitivity-Driven Adaptive Surrogate Modeling for Simulation and Optimization of Dynamical Systems | 260420 |
+| 2602.04537 | An Efficient Bayesian Framework for Inverse Problems via Optimization and Inversion | 260420 |
 
 ## How to use
 
@@ -115,7 +122,7 @@ S_new, X_new = suggest_next_batch(
 
 ## 트리거
 
-- PR에 `\d{6}\s` 형식의 일자가 들어오면 해당 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자를 기준으로 -24개월 윈도우 (현재 `2026-04-23`, 태그 `260423`).
+- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-04-20`, 태그 `260420`)를 기준으로 -24개월 윈도우.
 - 키워드 ≥2 매칭, 이전 인덱스와 중복 제외.
 
 ## 구조
