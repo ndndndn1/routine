@@ -45,7 +45,13 @@
 | [`mixture-density-networks_physics-informed_multimodal-inverse-design/`](./mixture-density-networks_physics-informed_multimodal-inverse-design/) | MDN × physics-informed × Multimodal inverse design (routine: 260423) |
 | [`invertible-neural-networks_bayesian-optimization_surrogate-modeling/`](./invertible-neural-networks_bayesian-optimization_surrogate-modeling/) | INN × bayesian optimization × surrogate (routine: 260423) |
 | [`physics-informed_sequential-design-of-experiments_active-learning/`](./physics-informed_sequential-design-of-experiments_active-learning/) | physics-informed × SDoE × active learning (routine: 260423) |
-| [`physics-informed_bayesian-optimization_surrogate-modeling/`](./physics-informed_bayesian-optimization_surrogate-modeling/) | physics-informed × BO × surrogate (routine: 260423) |
+| [`physics-informed_bayesian-optimization_surrogate-modeling/`](./physics-informed_bayesian-optimization_surrogate-modeling/) | physics-informed × BO × surrogate (routine: 260423, 260530) |
+| [`invertible-neural-networks_multimodal-inverse-design_surrogate-modeling/`](./invertible-neural-networks_multimodal-inverse-design_surrogate-modeling/) | INN × Multimodal inverse design × surrogate (routine: 260530) |
+| [`active-learning_bayesian-adaptive-design_sequential-design-of-experiments_physics-informed_surrogate-modeling/`](./active-learning_bayesian-adaptive-design_sequential-design-of-experiments_physics-informed_surrogate-modeling/) | AL × Bayesian adaptive × SDoE × physics-informed × surrogate (routine: 260530) |
+| [`invertible-neural-networks_physics-informed_surrogate-modeling/`](./invertible-neural-networks_physics-informed_surrogate-modeling/) | INN × physics-informed × surrogate (routine: 260530) |
+| [`physics-informed_tandem-structure_surrogate-modeling/`](./physics-informed_tandem-structure_surrogate-modeling/) | physics-informed × Tandem Structure × surrogate (routine: 260530) |
+| [`process-variation_bayesian-optimization_surrogate-modeling/`](./process-variation_bayesian-optimization_surrogate-modeling/) | process variation × BO × surrogate (routine: 260530) |
+| [`mixture-density-networks_invertible-neural-networks_multimodal-inverse-design_physics-informed/`](./mixture-density-networks_invertible-neural-networks_multimodal-inverse-design_physics-informed/) | MDN × INN × Multimodal inverse design × physics-informed (routine: 260530) |
 
 
 ## 논문 인덱스 (중복 방지)
@@ -80,6 +86,14 @@
 | 2503.00420 | A Physics-Informed Bayesian Optimization Method for Rapid Development of Electrical Machines | 260420 |
 | 2509.04651 | Sensitivity-Driven Adaptive Surrogate Modeling for Simulation and Optimization of Dynamical Systems | 260420 |
 | 2602.04537 | An Efficient Bayesian Framework for Inverse Problems via Optimization and Inversion | 260420 |
+| 2605.26059 | Accelerating Bayesian Inverse Design in Computational Fluid Dynamics Using Neural Operators | 260530 |
+| 2603.15925 | Generative Inverse Design with Abstention via Diagonal Flow Matching | 260530 |
+| 2502.05372 | Active Learning of Model Discrepancy with Bayesian Experimental Design | 260530 |
+| 2503.01375 | Bayesian Inverse Problems Meet Flow Matching: Efficient and Flexible Inference via Transformers | 260530 |
+| 2409.00564 | Using Deep Learning to Design High Aspect Ratio Fusion Devices | 260530 |
+| 2603.15430 | Physics-Informed Deep Neural Network Design of Reactively Loaded Metasurfaces | 260530 |
+| 2511.04990 | Uncertainty Quantification and Parameter Optimization of Plasma Etching Process Using Heteroscedastic Gaussian Process | 260530 |
+| 2602.00960 | Multimodal Scientific Learning Beyond Diffusions and Flows | 260530 |
 
 ## How to use
 
@@ -122,8 +136,8 @@ S_new, X_new = suggest_next_batch(
 
 ## 트리거
 
-- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-04-20`, 태그 `260420`)를 기준으로 -24개월 윈도우.
-- 키워드 ≥2 매칭, 이전 인덱스와 중복 제외.
+- 일자 명시 ±1개월 범위의 논문을 수집. 일자 없으면 루틴 실행 일자(현재 `2026-05-30`, 태그 `260530`)를 기준으로 -24개월 윈도우.
+- 키워드 ≥3 매칭, 이전 인덱스와 중복 제외.
 
 ## 구조
 
